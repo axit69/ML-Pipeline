@@ -4,6 +4,7 @@ import logging
 import os
 import pickle
 from sklearn.ensemble import RandomForestClassifier
+import yaml
 
 log_dir = 'logs'
 os.makedirs(log_dir, exist_ok=True)
@@ -27,6 +28,23 @@ logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
 
+def load_params(params_path: str):
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Params loaded %s', params_path)
+        return params
+    except yaml.YAMLError as e:
+        logger.error('YAML error %s', e)
+        raise
+    except FileNotFoundError as e:
+        logger.error('file not found error %s', e)
+        raise
+    except Exception as e:
+        logger.error('unexpected error found %s', e)
+        raise
+        
+
 def load_data(file_path: str):
     try:
         df = pd.read_csv(file_path)
@@ -48,7 +66,7 @@ def train_model(X_train: np.ndarray, y_train: np.ndarray, params: dict) -> Rando
             raise ValueError('The number of samples in X_train is not equal y_train')
         
         logger.debug('Initialize Randomforest model with parameters %s', params)
-        clf = RandomForestClassifier(n_estimators=params['n_estimators'], random_state=params['random_state'])
+        clf = RandomForestClassifier(n_estimators=params['n_estimator'], random_state=params['random_state'])
 
         logger.debug('model training started with %d samples ', X_train.shape[0])
         clf.fit(X_train, y_train)
@@ -77,7 +95,16 @@ def save_model(model, file_path: str) -> None:              # def save_model(clf
 
 def main():
     try:
-        params = {'n_estimators': 25, 'random_state': 2}
+        # using params to automate the pipeline
+        params = load_params(params_path='params.yaml')['model_training']
+
+        # above line can also be written as below it will return a dictionary containing n_estimator and random_state value
+
+        # all_params = load_params(params_path='params.yaml')
+        # params = all_params['model_training']
+
+        # hardcoded value for manual execution
+        # params = {'n_estimators': 25, 'random_state': 2}
         train_data = load_data('./data/processed/train_tfid.csv')
         X_train = train_data.iloc[:, :-1].values                   # All columns except the last become feature vectors.
         y_train = train_data.iloc[:, -1].values                     # The last column is the target label array.

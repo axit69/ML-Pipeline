@@ -3,6 +3,7 @@ import os
 from sklearn.model_selection import train_test_split
 import numpy as np
 import logging
+import yaml
 
 
 log_dir = 'logs'
@@ -25,6 +26,22 @@ logger.setLevel('DEBUG')
 
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+
+def load_params(params_path: str) -> dict:
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Parameters retrieved from %s',params_path)
+        return params
+    except FileNotFoundError as e:
+        logger.error('File not found %s', e)
+        raise
+    except yaml.YAMLError as e:
+        logger.error('YAML error %s', e)
+        raise
+    except Exception as e:
+        logger.error('Unexpected error encountered %s', e)
 
 def load_data(data_url: str) -> pd.DataFrame:
     try:
@@ -66,7 +83,11 @@ def save_data(train_data: pd.DataFrame ,test_data: pd.DataFrame , data_path: str
     
 def main():
         try:
-            test_size = 0.2
+            # using params to automate the pipeline
+            params = load_params(params_path='params.yaml')
+            test_size = params['data_ingestion']['test_size']
+            # hardcoded value of test size for manual pipeline execution
+            # test_size = 0.2
             data_path = 'https://raw.githubusercontent.com/vikashishere/YT-MLOPS-Complete-ML-Pipeline/refs/heads/main/experiments/spam.csv'
             df = load_data(data_url=data_path)
             final_df = preprocess_data(df)

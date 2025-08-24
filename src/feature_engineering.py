@@ -25,6 +25,23 @@ logger.setLevel('DEBUG')
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
+def load_params(params_path: str):
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Params loaded %s', params_path)
+        return params
+    except yaml.YAMLError as e:
+        logger.error('YAML error %s', e)
+        raise
+    except FileNotFoundError as e:
+        logger.error('file not found error %s', e)
+        raise
+    except Exception as e:
+        logger.error('unexpected error found %s', e)
+        raise
+        
+
 
 def load_data(file_path: str):
     try:
@@ -80,7 +97,12 @@ def save_data(df: pd.DataFrame, file_path: str) -> None:
 
 def main():
     try:
-        max_feature = 50            # it will create 50 feature(columns)
+        # automated the max_feature using pipeline
+        params = load_params(params_path='params.yaml')
+        max_feature = params['feature_engineering']['max_feature']
+
+        # hardcoded the value for manual execution
+        # max_feature = 50            # it will create 50 feature(columns)
 
         train_data = load_data('./data/interim/train_processed.csv')
         test_data = load_data('./data/interim/test_tranformed.csv')

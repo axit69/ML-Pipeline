@@ -6,3 +6,11 @@
 2025-08-24 11:45:29,346 - DEBUG - model_evaluation - data loaded from ./data/processed/test_tfid.csv
 2025-08-24 11:45:29,380 - DEBUG - model_evaluation - model evaluation metrices calculated
 2025-08-24 11:45:29,383 - DEBUG - model_evaluation - metrices saved to reports/metrics.json
+2025-08-24 17:37:42,291 - DEBUG - model_evaluation - Model loaded successfully ./models/model.pkl
+2025-08-24 17:37:42,302 - DEBUG - model_evaluation - data loaded from ./data/processed/test_tfid.csv
+2025-08-24 17:37:42,329 - DEBUG - model_evaluation - model evaluation metrices calculated
+2025-08-24 17:37:42,331 - DEBUG - model_evaluation - metrices saved to reports/metrics.json
+2025-08-24 17:39:26,117 - DEBUG - model_evaluation - Model loaded successfully ./models/model.pkl
+2025-08-24 17:39:26,128 - DEBUG - model_evaluation - data loaded from ./data/processed/test_tfid.csv
+2025-08-24 17:39:26,155 - DEBUG - model_evaluation - model evaluation metrices calculated
+2025-08-24 17:39:26,158 - DEBUG - model_evaluation - metrices saved to reports/metrics.json
