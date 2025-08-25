@@ -1,0 +1,6 @@
+[core]
+    remote = myremote
+['remote "dvcstore"']
+    url = s3://mlop1234
+['remote "myremote"']
+    url = s3://mlop1234
